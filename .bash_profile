@@ -56,3 +56,4 @@ alias kagent="kill -9 $SSH_AGENT_PID"
 
 ssh-add ~/.ssh/rs/id_rsa
 export CLOUD_KEY=~/.ssh/rs/id_rsa
+fortune
