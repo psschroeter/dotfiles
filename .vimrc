@@ -1,69 +1,123 @@
-" Make vim more useful
+"" Use Vim settings, rather then Vi settings (much better!).
+"" This must be first, because it changes other options as a side effect.
 set nocompatible
-" Enhance command-line completion
-set wildmenu
-" Allow cursor keys in insert mode
-set esckeys
-" Optimize for fast terminal connections
-set ttyfast
-" Add the g flag to search/replace by default
-set gdefault
-" Use UTF-8 without BOM
-set encoding=utf-8 nobomb
-" Change mapleader
-let mapleader=","
-" Don’t add empty newlines at the end of files
-set binary
+
+"" UI settings
+set esckeys " Allow cursor keys in insert mode
+set wildmenu " Enhance command-line completion
+set history=200		" keep X lines of command line history
+set gdefault " Add the g flag to search/replace by default
+set ttyfast " Optimize for fast terminal connections
+set encoding=utf-8 nobomb " Use UTF-8 without BOM
+let mapleader="," " Change mapleader
+set ruler
+set incsearch
+set hlsearch "highlight search terms
+set number
+set ignorecase
+set smartcase
+set binary " Don’t add empty newlines at the end of files
 set noeol
-" Centralize backups, swapfiles and undo history
+set nostartofline " Show the cursor position
+set laststatus=2 " Always show status line
+set shortmess=atI " Don’t show the intro message when starting vim
+set showmode " Show the current mode
+set title " Show the filename in the window titlebar
+set showcmd " Show the (partial) command as it’s being typed
+
+" setup backup settings
 set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
 if exists("&undodir")
 	set undodir=~/.vim/undo
 endif
+set backup
 
-" Enable line numbers
-set number
-" Enable syntax highlighting
-syntax on
-" Highlight current line
-set cursorline
-" Make tabs as wide as two spaces
+"" set filetype check on
+:filetype plugin indent on
+
+" encodings configure
+set fileencoding=utf-8
+set encoding=utf-8
+set fileencodings=ucs-bom,utf-8,gb2312,cp936
+set sessionoptions+=unix,slash
+
+" indentation related settings
 set tabstop=2
-" Show “invisible” characters
-set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set backspace=indent,eol,start
+set autoindent
+set smartindent
+
+" setting about old window resizing behavior when open a new window
+set winfixheight
+" not let all windows keep the same height/width
+set noequalalways
+
+" syntax highlighting settings
+syntax on 
+set t_Co=256 " 256 colors
+set background=dark 
+"set cursorline " Highlight current line
+set lcs=tab:▸\ ,trail:·,nbsp:_ " Show “invisible” characters
 set list
-" Highlight searches
-set hlsearch
-" Ignore case of searches
-set ignorecase
-" Highlight dynamically as pattern is typed
-set incsearch
-" Always show status line
-set laststatus=2
-" Enable mouse in all modes
-set mouse=a
-" Disable error bells
-set noerrorbells
-" Don’t reset cursor to start of line when moving around.
-set nostartofline
-" Show the cursor position
-set ruler
-" Don’t show the intro message when starting vim
-set shortmess=atI
-" Show the current mode
-set showmode
-" Show the filename in the window titlebar
-set title
-" Show the (partial) command as it’s being typed
-set showcmd
-" Use relative line numbers
-if exists("&relativenumber")
-	set relativenumber
-	au BufReadPost * set relativenumber
+if filereadable(expand("$HOME/.vim/colors/peaksea.vim"))
+  colorscheme peaksea
+end
+
+" some macros to execute script in ruby
+nmap ;e :w<CR>:exe ":!ruby " . getreg("%") . "" <CR>
+nmap ,o o<Esc>
+
+"folding settings
+"za = toggle fold on this scope
+"zM = fold all
+"zR = unfold all
+"#zo = unfold # scopes down
+"#zc = fold # scopes up
+
+set foldmethod=syntax   "fold based on syntax. Alt method: "indent"
+set foldnestmax=20      "deepest fold is 20 levels
+set nofoldenable        "dont fold by default
+set foldlevel=1         "this is just what i use
+highlight Folded ctermbg=black ctermfg=darkgrey
+
+if has("folding")
+  function! UnfoldCur()
+    if !&foldenable
+      return
+    endif
+    let cl = line(".")
+    if cl <= 1
+      return
+    endif
+    let cf  = foldlevel(cl)
+    let uf  = foldlevel(cl - 1)
+    let min = (cf > uf ? uf : cf)
+    if min
+      execute "normal!" min . "zo"
+      return 1
+    endif
+  endfunction
 endif
-" Start scrolling three lines before the horizontal window border
-set scrolloff=3
+
+function! ResCur()
+  if line("'\"") <= line("$")
+    normal! g`"
+    return 1
+  endif
+endfunction
+
+augroup resCur
+  autocmd!
+  if has("folding")
+    autocmd BufWinEnter * if ResCur() | call UnfoldCur() | endif
+  else
+    autocmd BufWinEnter * call ResCur()
+  endif
+augroup END
 
 " Strip trailing whitespace (,ss)
 function! StripWhitespace()

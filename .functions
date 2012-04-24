@@ -69,3 +69,8 @@ function codepoint() {
 	perl -e "use utf8; print sprintf('U+%04X', ord(\"$@\"))"
 	echo # newline
 }
+
+function grr () { grep -rin $1 .; }
+
+function grepvars () { perl -ne 'print if s/.*(#{.*}).*/\1/' $1 | sort | uniq;  }
+
