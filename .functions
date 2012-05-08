@@ -70,7 +70,14 @@ function codepoint() {
 	echo # newline
 }
 
-function grr () { grep -rin $1 .; }
 
 function grepvars () { perl -ne 'print if s/.*(#{.*}).*/\1/' $1 | sort | uniq;  }
+
+function frb () {
+  find . -name '*rb'  -exec grep -Hin $1 {} \;
+}
+
+function check_syntax () {
+  find . -name '*.rb'  -exec ruby -c {} \;
+}
 
