@@ -12,6 +12,8 @@ if [ "$test" = "" ]; then
    /usr/bin/ssh-agent | /usr/bin/grep -v echo >&$HOME/agent.sh 
 fi;
 
+export PATH=/usr/local/bin:$PATH
+
 test -e $HOME/agent.sh && source $HOME/agent.sh
 
 alias kagent="kill -9 $SSH_AGENT_PID"
