@@ -5,7 +5,7 @@ cd $dotdir
 dotdir=$(pwd -P)
 
 function doIt() {
-#  mkdir -p ._backup/$thisdate
+  mkdir -p ._backup/$thisdate
   for f in $(ls -a .); do 
     [ "$f" = "." ] && continue
     [ "$f" = ".." ] && continue
@@ -15,19 +15,19 @@ function doIt() {
     [ "$f" = "._backup" ] && continue
     [ "$f" = ".vim" ] && continue
     [[ ! "$f" =~ ^\. ]] && continue
-#    mv $HOME/$f $dotdir/._backup/$thisdate
-#    ln -s $dotdir/$f $HOME/$f
+    mv $HOME/$f $dotdir/._backup/$thisdate || true
+    ln -s $dotdir/$f $HOME/$f
     echo "ln -s $dotdir/$f $HOME/$f"
   done
-#  mv $HOME/.vim $dotdir/._backup/$thisdate
-#  mkdir -p $HOME/.vim/backups
-#  mkdir -p $HOME/.vim/undo
-#  mkdir -p $HOME/.vim/swaps
+  mv $HOME/.vim $dotdir/._backup/$thisdate
+  mkdir -p $HOME/.vim/backups
+  mkdir -p $HOME/.vim/undo
+  mkdir -p $HOME/.vim/swaps
   for f in $(ls .vim); do 
     [ "$f" = "backups" ] && continue
     [ "$f" = "undo" ] && continue
     [ "$f" = "swaps" ] && continue
-#    ln -s $dotdir/.vim/$f $HOME/.vim/$f
+    ln -s $dotdir/.vim/$f $HOME/.vim/$f
     echo "ln -s $dotdir/.vim/$f $HOME/.vim/$f"
   done
 }
