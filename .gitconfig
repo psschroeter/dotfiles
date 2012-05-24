@@ -66,3 +66,9 @@
 	pushInsteadOf = "git://gist.github.com/"
 [url "git://gist.github.com/"]
 	insteadOf = "gist:"
+[user]
+	name = Peter Schroeter
+	email = peter.schroeter@rightscale.com
+[github]
+	user = psschroeter
+	token = 933d2827eba9b396559938be85e76a1b
