@@ -130,6 +130,9 @@ endfunction
 noremap <leader>ss :call StripWhitespace()<CR>
 " Save a file as root (,W)
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
+noremap <leader>n :set nonumber!<CR>
+noremap <leader>c I#<Esc><Esc>
+
 
 " Automatic commands
 if has("autocmd")

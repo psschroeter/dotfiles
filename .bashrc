@@ -1,6 +1,6 @@
 [ -n "$PS1" ] && source ~/.bash_profile
 
-test=`/bin/ps -ef | /bin/grep ssh-agent | /bin/grep -v grep  | /usr/bin/awk '{print $2}' | xargs`
+test=`/bin/ps -ef | /usr/bin/grep ssh-agent | /usr/bin/grep -v grep  | /usr/bin/awk '{print $2}' | xargs`
 
 if [ "$test" = "" ]; then
    # there is no agent running
@@ -12,7 +12,7 @@ if [ "$test" = "" ]; then
    /usr/bin/ssh-agent | /usr/bin/grep -v echo >&$HOME/agent.sh 
 fi;
 
-export PATH=/usr/local/bin:$PATH
+export PATH=/usr/local/bin:$PATH:/usr/local/gsutil
 
 test -e $HOME/agent.sh && source $HOME/agent.sh
 
