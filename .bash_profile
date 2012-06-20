@@ -1,3 +1,4 @@
+grep=`which grep`
 # Load ~/.extra, ~/.bash_prompt, ~/.exports, ~/.aliases and ~/.functions
 # ~/.extra can be used for settings you don’t want to commit
 for file in ~/.{extra,bash_prompt,exports,aliases,functions}; do
@@ -19,7 +20,7 @@ export LC_ALL="en_US.UTF-8"
 export LANG="en_US"
 
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-[ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2)" scp sftp ssh
+[ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$($grep "^Host" ~/.ssh/config | $grep -v "[?*]" | cut -d " " -f2)" scp sftp ssh
 
 # Add tab completion for `defaults read|write NSGlobalDomain`
 # You could just use `-g` instead, but I like being explicit
@@ -32,13 +33,13 @@ complete -o "nospace" -W "Finder Dock Mail Safari iTunes iCal Address\ Book Syst
 export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
 
 # Finished adapting your PATH environment variable for use with MacPorts.
-source ~/.rvm/scripts/rvm
+[ -e "$HOME/.rvm/scripts/rvm" ] && source $HOME/.rvm/scripts/rvm
 
 export RUBYOPT=rubygems
 
 
 ###################### setup aah keygen stuff
-test=`/bin/ps -ef | /usr/bin/grep ssh-agent | /usr/bin/grep -v grep  | /usr/bin/awk '{print $2}' | xargs`
+test=`/bin/ps -ef | $grep ssh-agent | $grep -v grep  | /usr/bin/awk '{print $2}' | xargs`
 
 if [ "$test" = "" ]; then
    # there is no agent running
@@ -47,19 +48,22 @@ if [ "$test" = "" ]; then
       /bin/rm -f $HOME/agent.sh
    fi;
    # start a new agent
-   /usr/bin/ssh-agent | /usr/bin/grep -v echo >&$HOME/agent.sh 
+   /usr/bin/ssh-agent | $grep -v echo >&$HOME/agent.sh 
 fi;
 
 test -e $HOME/agent.sh && source $HOME/agent.sh
 
 alias kagent="kill -9 $SSH_AGENT_PID"
 
-ssh-add ~/.ssh/rs/id_rsa
-export CLOUD_KEY=~/.ssh/rs/id_rsa
-export JAVA_HOME="$(/usr/libexec/java_home)"
-export EC2_PRIVATE_KEY="$(/bin/ls $HOME/.ec2/pk-*.pem)"
-export EC2_CERT="$(/bin/ls $HOME/.ec2/cert-*.pem)"
-export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.5.2.5/jars"
-export EC2_AMITOOL_HOME="/usr/local/Cellar/ec2-ami-tools/1.3-45758/jars"
-fortune
+if [ -e $HOME/.ssh/rs/id_rsa ]; then
+  ssh-add $HOME/.ssh/rs/id_rsa
+  export CLOUD_KEY=$HOME/.ssh/rs/id_rsa
+fi
 
+[ -e "/usr/java/default" ] && export JAVA_HOME=/usr/java/default
+[ -e "/usr/libexec/java_home" ] && export JAVA_HOME="$(/usr/libexec/java_home)"
+[ -e "$HOME/.ec2" ] && export EC2_PRIVATE_KEY="$(/bin/ls $HOME/.ec2/pk-*.pem)"
+[ -e "$HOME/.ec2" ] && export EC2_CERT="$(/bin/ls $HOME/.ec2/cert-*.pem)"
+[ -e "/usr/local/Cellar/ec2-api-tools/1.5.2.5/jars" ] && export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.5.2.5/jars"
+[ -e "/usr/local/Cellar/ec2-ami-tools/1.3-45758/jars" ] && export EC2_AMITOOL_HOME="/usr/local/Cellar/ec2-ami-tools/1.3-45758/jars"
+[ `which fortune 2> /dev/null` ] && fortune
