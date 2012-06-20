@@ -27,7 +27,7 @@ export LANG="en_US"
 complete -W "NSGlobalDomain" defaults
 
 # Add `killall` tab completion for common apps
-complete -o "nospace" -W "Finder Dock Mail Safari iTunes iCal Address\ Book SystemUIServer" killallfortune 
+complete -o "nospace" -W "Finder Dock Mail Safari iTunes iCal Address\ Book SystemUIServer" killall
 
 # MacPorts Installer addition on 2011-09-29_at_19:55:30: adding an appropriate PATH variable for use with MacPorts.
 export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
@@ -38,20 +38,20 @@ export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
 export RUBYOPT=rubygems
 
 
-###################### setup aah keygen stuff
+###################### setup ssh keygen stuff
 test=`/bin/ps -ef | $grep ssh-agent | $grep -v grep  | /usr/bin/awk '{print $2}' | xargs`
 
 if [ "$test" = "" ]; then
    # there is no agent running
-   if [ -e "$HOME/agent.sh" ]; then
+   if [ -e "$HOME/.agent.sh" ]; then
       # remove the old file
-      /bin/rm -f $HOME/agent.sh
+      /bin/rm -f $HOME/.agent.sh
    fi;
    # start a new agent
-   /usr/bin/ssh-agent | $grep -v echo >&$HOME/agent.sh 
+   /usr/bin/ssh-agent | $grep -v echo >&$HOME/.agent.sh
 fi;
 
-test -e $HOME/agent.sh && source $HOME/agent.sh
+test -e $HOME/.agent.sh && source $HOME/.agent.sh
 
 alias kagent="kill -9 $SSH_AGENT_PID"
 
