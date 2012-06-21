@@ -1,4 +1,5 @@
 grep=`which grep`
+
 # Load ~/.extra, ~/.bash_prompt, ~/.exports, ~/.aliases and ~/.functions
 # ~/.extra can be used for settings you don’t want to commit
 for file in ~/.{extra,bash_prompt,exports,aliases,functions}; do
@@ -37,6 +38,7 @@ export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
 
 export RUBYOPT=rubygems
 
+export PATH=/usr/local/bin:$PATH:/usr/local/gsutil
 
 ###################### setup ssh keygen stuff
 test=`/bin/ps -ef | $grep ssh-agent | $grep -v grep  | /usr/bin/awk '{print $2}' | xargs`
