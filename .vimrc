@@ -69,6 +69,7 @@ end
 
 " some macros to execute script in ruby
 nmap ;e :w<CR>:exe ":!ruby " . getreg("%") . "" <CR>
+nmap ;c :w<CR>:exe ":!ruby -c " . getreg("%") . "" <CR>
 nmap ,o o<Esc>
 
 "folding settings
