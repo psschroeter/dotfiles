@@ -38,7 +38,7 @@ export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
 
 export RUBYOPT=rubygems
 
-export PATH=/usr/local/bin:$PATH:/usr/local/gsutil
+export PATH=/usr/local/bin:$PATH:/usr/local/gsutil:/usr/local/gcutil
 
 ###################### setup ssh keygen stuff
 test=`/bin/ps -ef | $grep ssh-agent | $grep -v grep  | /usr/bin/awk '{print $2}' | xargs`
@@ -60,6 +60,7 @@ alias kagent="kill -9 $SSH_AGENT_PID"
 if [ -e $HOME/.ssh/rs/id_rsa ]; then
   ssh-add $HOME/.ssh/rs/id_rsa
   export CLOUD_KEY=$HOME/.ssh/rs/id_rsa
+  export CLOUD_KEY_PUBLIC=$HOME/.ssh/rs/id_rsa.pub
 fi
 
 [ -e "/usr/java/default" ] && export JAVA_HOME=/usr/java/default
