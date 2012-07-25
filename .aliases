@@ -101,3 +101,6 @@ done
 
 alias ll='ls -al'
 alias findreq="grep -r require * | sed 's/^.*://' | sed 's/^ *//' | egrep '^require' | sort | uniq"
+rip=/Users/peter/Documents/rightimage_private/cookbooks/rightimage
+ri=/Users/peter/Documents/rightimage/cookbooks/rightimage
+rib=/Users/peter/Documents/right_image_builder
