@@ -130,3 +130,8 @@ function remove_git_merged_branches {
   fi
 }
 
+function open_root {
+  ssh -t rightscale@$1 'sudo bash -c "cat /home/rightscale/.ssh/authorized_keys  | grep peter.schroeter | sed s/.*ssh-rsa/ssh-rsa/  >> /root/.ssh/authorized_keys"'
+}
+
+
