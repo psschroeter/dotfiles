@@ -6,7 +6,6 @@ set nocompatible
 set esckeys " Allow cursor keys in insert mode
 set wildmenu " Enhance command-line completion
 set history=200		" keep X lines of command line history
-set gdefault " Add the g flag to search/replace by default
 set ttyfast " Optimize for fast terminal connections
 set encoding=utf-8 nobomb " Use UTF-8 without BOM
 let mapleader="," " Change mapleader
@@ -24,6 +23,11 @@ set shortmess=atI " Don’t show the intro message when starting vim
 set showmode " Show the current mode
 set title " Show the filename in the window titlebar
 set showcmd " Show the (partial) command as it’s being typed
+"set colorcolumn=80
+"highlight ColorColumn ctermbg=8
+"highlight ColorColumn guibg=Black
+highlight OverLength ctermbg=darkgrey guibg=darkgrey
+match OverLength /\%>80v.\+/
 
 " setup backup settings
 set backupdir=~/.vim/backups
@@ -142,3 +146,8 @@ if has("autocmd")
 	" Treat .json files as .js
 	autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
 endif
+
+" Syntax for Vagrantfile
+au BufRead,BufNewFile Vagrantfile setfiletype ruby
+au BufRead,BufNewFile Berksfile setfiletype ruby
+au BufRead,BufNewFile Berksfile.lock setfiletype ruby
