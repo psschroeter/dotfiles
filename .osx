@@ -126,12 +126,17 @@ chflags nohidden ~/Library
 # Top right screen corner → Mission Control
 defaults write com.apple.dock wvous-tr-corner -int 2
 defaults write com.apple.dock wvous-tr-modifier -int 0
-# Top left screen corner → Desktop
-#defaults write com.apple.dock wvous-tl-corner -int 4
-#defaults write com.apple.dock wvous-tl-modifier -int 0
+# Bottom right screen corner → Desktop
+defaults write com.apple.dock wvous-br-corner -int 4
+defaults write com.apple.dock wvous-br-modifier -int 0
 # Bottom left screen corner → Start screen saver
 #defaults write com.apple.dock wvous-bl-corner -int 5
 #defaults write com.apple.dock wvous-bl-modifier -int 0
+#don't use these two corners
+defaults delete com.apple.dock wvous-tl-corner
+defaults delete com.apple.dock wvous-tl-modifier
+defaults delete com.apple.dock wvous-bl-corner
+defaults delete com.apple.dock wvous-bl-modifier
 
 # Enable highlight hover effect for the grid view of a stack (Dock)
 defaults write com.apple.dock mouse-over-hilte-stack -bool true

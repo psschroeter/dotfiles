@@ -16,7 +16,7 @@ set number
 set ignorecase
 set smartcase
 set binary " Don’t add empty newlines at the end of files
-set noeol
+"set noeol
 set nostartofline " Show the cursor position
 set laststatus=2 " Always show status line
 set shortmess=atI " Don’t show the intro message when starting vim
