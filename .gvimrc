@@ -4,3 +4,5 @@ colorscheme railscat
 set guifont=Menlo:h14
 " Better line-height
 set linespace=8
+" Disable error bells
+set vb t_vb=

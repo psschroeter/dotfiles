@@ -8,6 +8,8 @@ set wildmenu " Enhance command-line completion
 set history=200		" keep X lines of command line history
 set ttyfast " Optimize for fast terminal connections
 set encoding=utf-8 nobomb " Use UTF-8 without BOM
+set noerrorbells
+set visualbell
 let mapleader="," " Change mapleader
 set ruler
 set incsearch
