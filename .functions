@@ -138,3 +138,11 @@ function git_branch_compare {
   git log --left-right --graph --cherry-pick --oneline $1...$2
 }
 
+function rpmtar {
+  rpm2cpio $1 | cpio -idmv
+}
+
+function git_hooks_install {
+  find . -type d -path '*.git/hooks' -exec cp ~/.githooks/* {} \;
+}
+
