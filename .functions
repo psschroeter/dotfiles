@@ -146,3 +146,13 @@ function git_hooks_install {
   find . -type d -path '*.git/hooks' -exec cp ~/.githooks/* {} \;
 }
 
+function rbuse() {
+  local pattern="^$1"
+
+  for installed_version in `rbenv versions --bare`; do
+    if [[ $installed_version =~ $pattern ]]; then
+      echo "Using rbenv version $installed_version"
+      export RBENV_VERSION=$installed_version
+    fi
+  done
+}
