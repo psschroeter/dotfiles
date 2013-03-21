@@ -149,7 +149,7 @@ function git_hooks_install {
 function rbuse() {
   local pattern="^$1"
 
-  for installed_version in `rbenv versions --bare`; do
+  for installed_version in `rbenv versions`; do
     if [[ $installed_version =~ $pattern ]]; then
       echo "Using rbenv version $installed_version"
       export RBENV_VERSION=$installed_version
