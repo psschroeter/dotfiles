@@ -146,6 +146,11 @@ function git_hooks_install {
   find . -type d -path '*.git/hooks' -exec cp ~/.githooks/* {} \;
 }
 
+function git_gh_push_branch {
+  local branch=`git branch | grep '*' | cut -d" " -f 2`
+  git push origin -u $branch
+}
+
 function rbuse() {
   local pattern="^$1"
 
@@ -156,3 +161,21 @@ function rbuse() {
     fi
   done
 }
+
+function dev_tag() {
+  local server=$1
+  local cookbook=$2
+  if [ -z "$2" ]; then
+    cookbook=rightimage
+  fi
+  ruby << EOF
+require "rest_connection"
+tag = "rs_agent_dev:dev_cookbooks=$cookbook"
+s = Server.find($server)
+raise "could not find server $1" unless s
+Tag.set(s.href, [tag])
+Tag.set(s.current_instance_href, [tag])
+EOF
+}
+
+

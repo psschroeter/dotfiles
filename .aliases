@@ -100,7 +100,9 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 done
 
 alias ll='ls -al'
-alias be='bundle exec'
+alias bx='bundle exec'
+alias br='bundle exec rake'
+alias r='rake'
 alias findreq="grep -r require * | sed 's/^.*://' | sed 's/^ *//' | egrep '^require' | sort | uniq"
 rip=/Users/peter/Documents/rightimage_private/cookbooks/rightimage
 rit=/Users/peter/Documents/rightimage_tester/cookbooks/rightimage_tester
