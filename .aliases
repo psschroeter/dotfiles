@@ -1,8 +1,7 @@
 # Easier navigation: .., ..., ~ and -
 alias ..="cd .."
 alias ...="cd ../.."
-alias ~="cd ~" # `cd` is probably faster to type though
-alias -- -="cd -"
+alias ....="cd ../../.."
 
 # Shortcuts
 alias d="cd ~/Documents/Dropbox"
@@ -63,13 +62,10 @@ type -t md5sum > /dev/null || alias md5sum="md5"
 alias c="tr -d '\n' | pbcopy"
 
 # Recursively delete `.DS_Store` files
-alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+alias dsstorecleanup="find . -type f -name '*.DS_Store' -ls -delete"
 
 # File size
 alias fs="stat -f \"%z bytes\""
-
-# ROT13-encode text. Works for decoding, too! ;)
-alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 
 # Empty the Trash on all mounted volumes and the main HDD
 # Also, clear Apple’s System Logs to improve shell startup speed
@@ -86,11 +82,6 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
-# Disable Spotlight
-alias spotoff="sudo mdutil -a -i off"
-# Enable Spotlight
-alias spoton="sudo mdutil -a -i on"
-
 # PlistBuddy alias, because sometimes `defaults` just doesn’t cut it
 alias plistbuddy="/usr/libexec/PlistBuddy"
 
@@ -103,8 +94,13 @@ alias ll='ls -al'
 alias bx='bundle exec'
 alias br='bundle exec rake'
 alias r='rake'
+
 alias findreq="grep -r require * | sed 's/^.*://' | sed 's/^ *//' | egrep '^require' | sort | uniq"
-rip=/Users/peter/Documents/rightimage_private/cookbooks/rightimage
-rit=/Users/peter/Documents/rightimage_tester/cookbooks/rightimage_tester
-ri=/Users/peter/Documents/rightimage/cookbooks/rightimage
-rib=/Users/peter/Documents/right_image_builder
+docs=$HOME/Documents
+rip=$docs/rightimage_private/cookbooks/rightimage
+rit=$docs/rightimage_tester/cookbooks/rightimage_tester
+ri=$docs/rightimage/cookbooks/rightimage
+rib=$docs/right_image_builder
+rir=$docs/rightimage_rebundle
+rlp=$docs/right_link_package
+rl=$docs/right_link

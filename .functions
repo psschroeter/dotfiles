@@ -192,3 +192,24 @@ function gitco() {
     fi
   fi
 }
+
+function cd() {
+  if [ "$1" = "-" ]; then
+    popd > /dev/null
+  else
+    pushd $1 > /dev/null
+  fi
+}
+
+function flip() {
+  builtin cd -
+}
+
+function pd() {
+  if [ "$1" = "-" ]; then
+    popd
+  else
+    pushd $1
+  fi
+}
+
