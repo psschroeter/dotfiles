@@ -17,7 +17,7 @@ set hlsearch "highlight search terms
 set number
 set ignorecase
 set smartcase
-set binary " Don’t add empty newlines at the end of files
+"set binary " Don’t add empty newlines at the end of files
 "set noeol
 set nostartofline " Show the cursor position
 set laststatus=2 " Always show status line

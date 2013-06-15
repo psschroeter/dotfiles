@@ -178,4 +178,17 @@ Tag.set(s.current_instance_href, [tag])
 EOF
 }
 
-
+function gitco() {
+  lb=`git branch | grep $1 | head -n 1`
+  if [ ! -z "$lb"  ]; then
+    echo $lb
+    git checkout $lb
+  else
+    rb=`git branch -r | sed 's#^.*/##' | grep $1 | head -n 1`
+    if [ ! -z "$rb"  ]; then
+      git checkout $rb
+    else
+      ech "Could not find branch like $1"
+    fi
+  fi
+}
