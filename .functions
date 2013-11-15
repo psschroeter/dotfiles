@@ -188,10 +188,17 @@ function gitco() {
     if [ ! -z "$rb"  ]; then
       git checkout $rb
     else
-      ech "Could not find branch like $1"
+      echo "Could not find branch like $1"
     fi
   fi
 }
+
+function git_subrepo_set() {
+  local url=`git config --get remote.origin.url | sed s/http(s)?/git/`
+  git config --unset remote.origin.url
+  git config --add remote.origin.url $url
+}
+  
 
 function cd() {
   if [ "$1" = "-" ]; then
@@ -211,5 +218,38 @@ function pd() {
   else
     pushd $1
   fi
+}
+
+
+function git_head_distances() {
+  # first argument is an interesting commit/branch
+  topical=$1
+
+  local tmpfile=/tmp/git_find_remote_distances_tmp
+  echo -n "" > $tmpfile
+  git tag --contains $topical | grep -v HEAD | while read branch ; do
+    distance=`git log --oneline $topical..$branch | wc -l`
+    echo "$distance $branch" >> $tmpfile
+  done
+  git branch -r --contains $topical | grep -v HEAD | while read branch ; do
+    distance=`git log --oneline $topical..$branch | wc -l`
+    echo "$distance $branch" >> $tmpfile
+  done
+  cat $tmpfile | sort 
+}
+
+function git_pull_distances() {
+  # first argument is an interesting commit/branch
+  topical=$1
+
+  local tmpfile=/tmp/git_find_remote_distances_tmp
+  echo -n "" > $tmpfile
+  git ls-remote | grep pull | grep head | while read branch ; do
+    sha=`echo $branch | cut -d' ' -f 1`
+    pull=`echo $branch | cut -d' ' -f 2`
+    distance=`git log --oneline $topical..$sha| wc -l`
+    echo "$distance $pull" >> $tmpfile
+  done
+  cat $tmpfile | sort 
 }
 

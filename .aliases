@@ -92,8 +92,11 @@ done
 
 alias ll='ls -al'
 alias bx='bundle exec'
+alias bt='bundle exec thor'
 alias br='bundle exec rake'
 alias r='rake'
+
+alias sysvagrant='/usr/bin/vagrant'
 
 alias findreq="grep -r require * | sed 's/^.*://' | sed 's/^ *//' | egrep '^require' | sort | uniq"
 docs=$HOME/Documents
