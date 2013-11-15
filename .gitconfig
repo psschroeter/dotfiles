@@ -71,3 +71,5 @@
 [user]
 	name = Peter Schroeter
 	email = peter.schroeter@rightscale.com
+[push]
+	default = simple
