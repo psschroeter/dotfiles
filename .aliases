@@ -90,6 +90,8 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 	alias "$method"="lwp-request -m '$method'"
 done
 
+alias sbl='open -a "Sublime Text 2"'
+alias gitfix='git config --unset branch.master.remote branch.master.merge'
 alias ll='ls -al'
 alias bx='bundle exec'
 alias bt='bundle exec thor'
@@ -101,9 +103,10 @@ alias sysvagrant='/usr/bin/vagrant'
 alias findreq="grep -r require * | sed 's/^.*://' | sed 's/^ *//' | egrep '^require' | sort | uniq"
 docs=$HOME/Documents
 rip=$docs/rightimage_private/cookbooks/rightimage
-rit=$docs/rightimage_tester/cookbooks/rightimage_tester
+rit=$docs/rightimage_tools
 ri=$docs/rightimage/cookbooks/rightimage
 rib=$docs/right_image_builder
 rir=$docs/rightimage_rebundle
 rlp=$docs/right_link_package
 rl=$docs/right_link
+rlt=$docs/rightlink_tester
