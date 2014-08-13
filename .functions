@@ -179,18 +179,20 @@ Tag.set(s.current_instance_href, [tag])
 EOF
 }
 
-function gitco() {
-  lb=`git branch | grep $1 | head -n 1`
-  if [ ! -z "$lb"  ]; then
-    echo $lb
-    git checkout $lb
-  else
-    rb=`git branch -r | sed 's#^.*/##' | grep $1 | head -n 1`
-    if [ ! -z "$rb"  ]; then
-      git checkout $rb
+function gtb() {
+  branches=`git branch -a | sed 's/[ *]//g' | sed 's#^.*/##' | grep $1 | sort -r | uniq`
+  count=0
+  for branch in $branches; do
+    count=$(($count+1))
+    if [[ "$count" -eq 1 ]]; then
+      echo "Checking out branch $branch"
+      git checkout $branch
     else
-      echo "Could not find branch like $1"
+      echo "Also found branch $branch"
     fi
+  done
+  if [[ "$count" -eq 0 ]]; then
+    echo "Could not find branch like $1"
   fi
 }
 
