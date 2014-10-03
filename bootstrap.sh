@@ -5,30 +5,28 @@ cd $dotdir
 dotdir=$(pwd -P)
 
 function doIt() {
-  mkdir -p ._backup/$thisdate
   for f in $(ls -a .); do 
-    [ "$f" = "." ] && continue
-    [ "$f" = ".." ] && continue
-    [ "$f" = ".osx" ] && continue
-    [ "$f" = ".brew" ] && continue
-    [ "$f" = ".git" ] && continue
-    [ "$f" = "._backup" ] && continue
-    [ "$f" = ".vim" ] && continue
-    [[ ! "$f" =~ ^\. ]] && continue
-    mv $HOME/$f $dotdir/._backup/$thisdate || true
-    ln -s $dotdir/$f $HOME/$f
-    echo "ln -s $dotdir/$f $HOME/$f"
+    case $f in
+      .|..|.osx|.brew|.git|.githooks|.vim|._backup)
+        ;;
+      .*)
+        echo "ln -f $dotdir/$f $HOME/$f"
+        ln -f $dotdir/$f $HOME/$f
+        ;;
+    esac
   done
-  mv $HOME/.vim $dotdir/._backup/$thisdate
   mkdir -p $HOME/.vim/backups
   mkdir -p $HOME/.vim/undo
   mkdir -p $HOME/.vim/swaps
   for f in $(ls .vim); do 
-    [ "$f" = "backups" ] && continue
-    [ "$f" = "undo" ] && continue
-    [ "$f" = "swaps" ] && continue
-    ln -s $dotdir/.vim/$f $HOME/.vim/$f
-    echo "ln -s $dotdir/.vim/$f $HOME/.vim/$f"
+    case $f in
+      backups|undo|swaps)
+        ;;
+      *)
+        ln -s $dotdir/.vim/$f $HOME/.vim/$f
+        echo "ln -f $dotdir/.vim/$f $HOME/.vim/$f"
+        ;;
+    esac
   done
 }
 if [ "$1" == "--force" -o "$1" == "-f" ]; then
