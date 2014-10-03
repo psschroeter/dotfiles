@@ -92,11 +92,12 @@ done
 
 alias sbl='open -a "Sublime Text 2"'
 alias gitfix='git config --unset branch.master.remote branch.master.merge'
-alias ll='ls -al'
+alias ll='ls -l'
 alias bx='bundle exec'
 alias bt='bundle exec thor'
 alias br='bundle exec rake'
 alias r='rake'
+
 
 alias sysvagrant='/usr/bin/vagrant'
 
