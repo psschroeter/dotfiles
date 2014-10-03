@@ -1,20 +1,19 @@
 #!/usr/bin/env ruby
- 
+
 def prepend_message
   branch = `git rev-parse --abbrev-ref HEAD`
-  acunote_task = branch.match(/acu[0-9]+/)
- 
-  return unless acunote_task
- 
-  reference = "#{acunote_task} - "
- 
+  acunote_match  = branch.match(/acu[0-9]+/)
+
+  return unless acunote_match
+  acunote_id = acunote_match[0]
+
   old_msg = File.read ARGV[0]
- 
-  unless old_msg.match(reference)
-    File.open ARGV[0], 'w' do |new_msg|
-      new_msg.write reference + old_msg
+
+  unless old_msg.match(/^#{acunote_id}/)
+    File.open(ARGV[0], 'w') do |fh|
+      fh.write("#{acunote_id} #{old_msg}")
     end
   end
 end
- 
+
 prepend_message
