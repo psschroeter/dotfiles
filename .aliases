@@ -102,7 +102,11 @@ alias r='rake'
 alias sysvagrant='/usr/bin/vagrant'
 
 alias findreq="grep -r require * | sed 's/^.*://' | sed 's/^ *//' | egrep '^require' | sort | uniq"
-docs=$HOME/Documents
+if [ -e $HOME/Documents ]; then
+  docs=$HOME/Documents
+else
+  docs=$HOME
+fi
 rip=$docs/rightimage_private/cookbooks/rightimage
 rit=$docs/rightimage_tools
 ri=$docs/rightimage/cookbooks/rightimage

@@ -163,6 +163,18 @@ function rbuse() {
     fi
   done
 }
+function rvuse() {
+  local pattern="ruby-$1"
+
+  for installed_version in `rvm list strings`; do
+    if [[ $installed_version =~ $pattern ]]; then
+      echo "Using rvm version $installed_version"
+      rvm use $installed_version
+      break
+    fi
+  done
+}
+
 
 function dev_tag() {
   local server=$1
