@@ -3,6 +3,19 @@ function md() {
 	mkdir -p "$@" && cd "$@"
 }
 
+function uprll() {
+  if [ ! -z "$1" ]; then 
+    TRAVIS_BRANCH=$1
+  fi
+  if [ -z "$TRAVIS_BRANCH" ]; then 
+    echo TRAVIS_BRANCH not set
+    return 1
+  fi
+  cd $rll
+  s3cmd -P --recursive --force put build/* s3://rightlinklite/$TRAVIS_BRANCH/
+}
+
+
 # Use Git’s colored diff when available
 hash git &>/dev/null
 if [ $? -eq 0 ]; then
@@ -85,7 +98,8 @@ function gin () {
 }
 
 function check_syntax () {
-  find . -name '*.rb'  -exec ruby -c {} \;
+  dir=${1:-.}
+  find $dir -name '*.rb'  -exec ruby -c {} \;
 }
 
 function link_remote () {
@@ -105,8 +119,8 @@ function remove_git_merged_branches {
   fi
     echo "Fetching merged branches..."
   git remote prune origin
-  remote_branches=$(git branch -r --merged | grep -v '/master$' | grep -v "/$current_branch$")
-  local_branches=$(git branch --merged | grep -v 'master$' | grep -v "$current_branch$")
+  remote_branches=$(git branch -r --merged | grep 'ivory\|aqua\|cornsilk\|teal' | grep -v '/master$' | grep -v "/$current_branch$")
+  local_branches=$(git branch --merged | grep 'ivory\|aqua\|cornsilk\|teal' | grep -v 'master$' | grep -v "$current_branch$")
   if [ -z "$remote_branches" ] && [ -z "$local_branches" ]; then
     echo "No existing branches have been merged into $current_branch."
   else
@@ -121,9 +135,9 @@ function remove_git_merged_branches {
     echo
     if [ "$choice" == "y" ] || [ "$choice" == "Y" ]; then
       # Remove remote branches
-      git push origin `git branch -r --merged | grep -v '/master$' | grep -v "/$current_branch$" | sed 's/origin\//:/g' | tr -d '\n'`
+      git push origin `git branch -r --merged | grep 'ivory\|aqua\|cornsilk\|teal' | grep -v '/master$' | grep -v "/$current_branch$" | sed 's/origin\//:/g' | tr -d '\n'`
       # Remove local branches
-      git branch -d `git branch --merged | grep -v 'master$' | grep -v "$current_branch$" | sed 's/origin\///g' | tr -d '\n'`
+      git branch -d `git branch --merged | grep 'ivory\|aqua\|cornsilk\|teal' | grep -v 'master$' | grep -v "$current_branch$" | sed 's/origin\///g' | tr -d '\n'`
     else
       echo "No branches removed."
     fi
@@ -143,8 +157,14 @@ function rpmtar {
   rpm2cpio $1 | cpio -idmv
 }
 
+# Usage: git_hooks_install <dir1> <dir2> <etc...>
 function git_hooks_install {
-  find . -type d -path '*.git/hooks' -exec cp ~/.githooks/* {} \;
+  for dir in ${@}; do
+    if [ -d "$dir/.git/hooks" ]; then
+      echo "Copying githooks to $dir/.git/hooks"
+      cp -f ~/.git_template/hooks/* $dir/.git/hooks
+    fi
+ done
 }
 
 function git_gh_push_branch {
@@ -287,4 +307,26 @@ function ruconfig() {
   fi
 }
 
+function launchraw() {
+  aws ec2 run-instances --region us-west-2  --image-id ami-57d18767 --key-name default --security-groups monkey_private_ports_open --instance-type m3.medium --user-data file:///Users/Peter/ec2boot.ps1
+#  aws ec2 get-password-data --instance-id i-0bf8c404 --priv-launch-key ~/.ssh/tmp.key --region us-west-2
 
+}
+
+function usego() {
+  gvm use go1.4
+}
+
+function rllsync() {
+  if make build/rightlink; then
+    if [[ -z $2 ]]; then
+      open_root $1
+    fi
+    rsync -avz build/rightlink root@$1:/usr/local/bin/rightlink && \
+      ssh root@$1 "service rightlink restart"
+ fi
+}
+
+function vmlog() {
+  cd $(dirname $(find /var/log/virtualmonkey | sort -r | head -n 1))
+}

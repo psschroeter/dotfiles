@@ -124,11 +124,11 @@ chflags nohidden ~/Library
 
 # Hot corners
 # Top right screen corner → Mission Control
-defaults write com.apple.dock wvous-tr-corner -int 2
-defaults write com.apple.dock wvous-tr-modifier -int 0
+defaults delete com.apple.dock wvous-tr-corner
+defaults delete com.apple.dock wvous-tr-modifier
 # Bottom right screen corner → Desktop
-defaults write com.apple.dock wvous-br-corner -int 4
-defaults write com.apple.dock wvous-br-modifier -int 0
+defaults delete com.apple.dock wvous-br-corner
+defaults delete com.apple.dock wvous-br-modifier
 # Bottom left screen corner → Start screen saver
 #defaults write com.apple.dock wvous-bl-corner -int 5
 #defaults write com.apple.dock wvous-bl-modifier -int 0

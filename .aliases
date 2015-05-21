@@ -107,11 +107,20 @@ if [ -e $HOME/Documents ]; then
 else
   docs=$HOME
 fi
-rip=$docs/rightimage_private/cookbooks/rightimage
+rip=$docs/rightimage_private/cookbooks
 rit=$docs/rightimage_tools
+rt=$docs/rightlink_tester
 ri=$docs/rightimage/cookbooks/rightimage
 rib=$docs/right_image_builder
 rir=$docs/rightimage_rebundle
 rlp=$docs/right_link_package
 rl=$docs/right_link
 rlt=$docs/rightlink_tester
+ra=$docs/right_agent
+export GOPATH=$HOME/Go
+export TRAVIS_BRANCH=peter
+rll=$GOPATH/src/github.com/rightscale/rightlinklite
+rsc=$GOPATH/src/github.com/rightscale/rsc
+
+
+

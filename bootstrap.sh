@@ -24,7 +24,7 @@ function doIt() {
         ;;
       *)
         ln -s $dotdir/.vim/$f $HOME/.vim/$f
-        echo "ln -f $dotdir/.vim/$f $HOME/.vim/$f"
+        echo "ln -s $dotdir/.vim/$f $HOME/.vim/$f"
         ;;
     esac
   done
