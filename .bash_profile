@@ -38,7 +38,7 @@ export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
 
 export RUBYOPT=rubygems
 
-export PATH=/usr/local/bin:/usr/local/sbin:$PATH:/usr/local/gsutil:/usr/local/gcutil
+export PATH=/usr/local/bin:/usr/local/sbin:$PATH:/usr/local/gsutil:/usr/local/gcutil:$HOME/bin
 
 ###################### setup ssh keygen stuff
 test=`/bin/ps -ef | $grep ssh-agent | $grep -v grep  | /usr/bin/awk '{print $2}' | xargs`
