@@ -159,7 +159,12 @@ function rpmtar {
 
 # Usage: git_hooks_install <dir1> <dir2> <etc...>
 function git_hooks_install {
-  for dir in ${@}; do
+  if [[ -z "${@}" ]]; then
+    dirs=`git rev-parse --show-toplevel`
+  else
+    dirs="${@}"
+  fi
+  for dir in $dirs; do
     if [ -d "$dir/.git/hooks" ]; then
       echo "Copying githooks to $dir/.git/hooks"
       cp -f ~/.git_template/hooks/* $dir/.git/hooks
@@ -313,14 +318,20 @@ function launchraw() {
 
 }
 
-function usego() {
-  if [ -x ~/bin/gimme ]; then
-    eval "$(gimme 1.4)"
+function gouse() {
+  local ver=${1:-1.4}
+  eval "$(gimme $ver)"
+  if [[ -e $PWD/Godeps/_workspace ]]; then
+    unset GOGO15VENDOREXPERIMENT
     [[ ! $GOPATH =~ $PWD/Godeps/_workspace ]] && export GOPATH=$PWD/Godeps/_workspace:$GOPATH
     [[ ! $PATH =~ $PWD/Godeps/_workspace/bin ]] && export PATH=$PWD/Godeps/_workspace/bin:$PATH
   else
-    gvm use go1.4
+    export GO15VENDOREXPERIMENT=1
+    export GOPATH=/Users/peter/go
+    export PATH=`echo $PATH | sed 's/:.[^:]*Godeps[^:]*:/:/'`
   fi
+  [[ ! $GOPATH =~ $HOME/go ]] && export GOPATH=$GOPATH:$HOME/go
+  [[ ! $PATH =~ $HOME/go/bin ]] && export PATH=$PATH:$HOME/go/bin
 }
 
 function rllsync() {
@@ -335,4 +346,108 @@ function rllsync() {
 
 function vmlog() {
   cd $(dirname $(find /var/log/virtualmonkey | sort -r | head -n 1))
+}
+
+function nginx() {
+  if [ "$1" == "start" ]; then
+    sudo launchctl start homebrew.mxcl.nginx
+  elif [ "$1" == "stop" ]; then
+    sudo launchctl stop homebrew.mxcl.nginx
+  elif [i "$1" == "restart" ]; then
+    sudo launchctl stop homebrew.mxcl.nginx
+    sudo launchctl start homebrew.mxcl.nginx
+  else
+    echo "Unknown command $1"
+  fi
+}
+
+function unsetall() {
+  if [ -n "$1" ]; then
+    for x in `env | grep $1 | cut -d'=' -f 1`; do 
+      echo "Unsetting $x"
+      unset $x
+    done
+  fi
+}
+
+function cget {
+  curl -H "X-API-Version:1.5" -H "Authorization: Bearer $access_token" $api_hostname$1
+}
+function cput {
+  local verb=$1
+  shift
+  curl -H "X-API-Version:1.5" -H "Authorization: Bearer $access_token" -X PUT $api_hostname$verb $1 $2 $3 $4 $5 $6 $7 $8 $9
+}
+
+function cleanlog {
+  grep -v RestClient | grep -iv "application/vnd" | grep -v Duration | grep -v -E '^#$'
+}
+
+function run_basic_test {
+  local test_name=$1
+  local image=$2
+  local suite=$3
+  if [[ -z "$image" ]]; then image=ubuntu14; fi
+  if [[ -z "$suite" ]]; then suite=master; fi
+
+  case "$image" in
+    win2008) image_regex='Windows_Server_Datacenter_2008R2_x64$' ;;
+    win2012) image_regex='Windows_Server_Standard_2012_x64$' ;;
+    win2012r2) image_regex='Windows_Server_Standard_2012R2_x64$' ;;
+    ubuntu12) image_regex='Ubuntu_12.04_x64$' ;;
+    ubuntu14) image_regex='Ubuntu_14.04_x64$' ;;
+    coreos) image_regex='CoreOS_stable_x64$' ;;
+    centos6) image_regex='CentOS_6.*_x64$' ;;
+    centos7) image_regex='CentOS_7.*_x64$' ;;
+    *)
+      echo "OS not recognized"
+      return 1;;
+  esac
+  if [[ $image =~ win ]]; then os=windows; else os=linux; fi
+  # Test-cases
+  #   rl10_smoke_test
+  #   monitoring
+  #   life_cycle
+  #   reboot
+  #   stop_start
+  #   upgrade
+  #   api_proxy
+
+  local monkey_root=~/Documents/rightlinklite_tests
+  local prefix=pete
+  cd $monkey_root/suites/$os/
+
+  bundle exec "monkey create --suite-file $monkey_root/suites/$os/enable_running/base.json --server-template-map-file $monkey_root/config/servertemplate_mapping/$suite.json --prefix ${prefix}_rl10_AWS_${image} --cloud-names 'AWS US-Oregon' --only '$image_regex|RightImage_Ubuntu_12.04_x64_v14.2_EBS' --use-first-image --verbose --instance-type-name 'm3.medium'"
+
+  bundle exec "monkey run --suite-file $monkey_root/suites/$os/enable_running/base.json --server-template-map-file $monkey_root/config/servertemplate_mapping/$suite.json --prefix ${prefix}_rl10_AWS_${image} --test-cases $test_name --timeouts 'booting_timeout=3600' 'completed_timeout=3600' 'default_timeout=3600' 'error_timeout=3600' 'failed_timeout=3600' 'inactive_timeout=3600' 'operational_timeout=3600' 'snapshot_timeout=3600' 'stopped_timeout=3600' 'terminated_timeout=3600' --verbose --yes"
+}
+
+function destroy_basic_test {
+  local image=$1
+  local suite=$2
+  local monkey_root=~/Documents/rightlinklite_tests
+  local prefix=pete
+  cd $monkey_root/suites/$os/
+  if [[ -z "$image" ]]; then image=ubuntu14; fi
+  if [[ -z "$suite" ]]; then suite=master; fi
+  if [[ $image =~ win ]]; then os=windows; else os=linux; fi
+
+
+  bundle exec "monkey destroy --suite-file $monkey_root/suites/$os/enable_running/base.json --server-template-map-file $monkey_root/config/servertemplate_mapping/$suite.json  --prefix ${prefix}_rl10_AWS_${image}  --cloud-names 'AWS US-Oregon' --only '$image|RightImage_Ubuntu_12.04_x64_v14.2_EBS' --verbose"
+
+   pete_rl10lin_AWS_ORG_Ubu12_004_enable_running-base__monitoring
+}
+
+function list_pubkeys {
+  pushd ~/.ssh
+  for file in *.pub; do ssh-keygen -lf $file; done
+  popd
+}
+
+function dockerclean {
+  set -x
+  docker rm $(docker ps -a -q)
+  docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
+  docker run --rm --volume /var/run/docker.sock:/var/run/docker.sock remmelt/docker-gc
+  set +x
 }
