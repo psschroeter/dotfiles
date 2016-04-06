@@ -53,10 +53,8 @@ alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
 
 # Canonical hex dump; some systems have this symlinked
-type -t hd > /dev/null || alias hd="hexdump -C"
-
-# OS X has no `md5sum`, so use `md5` as a fallback
-type -t md5sum > /dev/null || alias md5sum="md5"
+if which hd >/dev/null 2>&1; then alias hd="hexdump -C"; fi
+if which md5sum >/dev/null 2>&1; then alias md5sum="hexdump -C"; fi
 
 # Trim new lines and copy to clipboard
 alias c="tr -d '\n' | pbcopy"
@@ -97,16 +95,13 @@ alias bx='bundle exec'
 alias bt='bundle exec thor'
 alias br='bundle exec rake'
 alias r='rake'
+alias lopbox='ssh rightscale@104.197.116.132'
 
 
 alias sysvagrant='/usr/bin/vagrant'
 
 alias findreq="grep -r require * | sed 's/^.*://' | sed 's/^ *//' | egrep '^require' | sort | uniq"
-if [ -e $HOME/Documents ]; then
-  docs=$HOME/Documents
-else
-  docs=$HOME
-fi
+docs=$HOME/Documents
 rip=$docs/rightimage_private/cookbooks
 rit=$docs/rightimage_tools
 rt=$docs/rightlink_tester
@@ -117,10 +112,16 @@ rlp=$docs/right_link_package
 rl=$docs/right_link
 rlt=$docs/rightlink_tester
 ra=$docs/right_agent
-export GOPATH=$HOME/Go
+gors=~/go/src/github.com/rightscale
+rll=$gors/rightlinklite
+rsc=$gors/rsc
+rst=$gors/right_st
+cc=~/go/src/github.com/coreos/coreos-cloudinit
+rc=$docs/rightscale_core
+d=$docs/docker
+alias dgc='docker run --rm --volume /var/run/docker.sock:/var/run/docker.sock remmelt/docker-gc'
+
 export TRAVIS_BRANCH=peter
-rll=$GOPATH/src/github.com/rightscale/rightlinklite
-rsc=$GOPATH/src/github.com/rightscale/rsc
-
-
-
+export BUCKET=rightlinklite-dev
+export TRAVIS_PULL_REQUEST=false
+export BASE_URL=https://rightlinklite-dev.s3.amazonaws.com/rll
